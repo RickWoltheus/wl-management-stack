@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { api } from "~/utils/api";
+import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
 import { Button } from "~/features/shared/components/Button";
-import { Input } from "~/features/shared/components/Input";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
@@ -20,24 +20,13 @@ export const employeeSchema = z.object({
   role: z.string().min(1),
 });
 
-export const placeholders = {
-  firstname: "John",
-  insertion: "van",
-  lastname: "Doe",
-  email: "JohnVanDoe@wl-management.nl",
-  role: "Plumber",
-};
-
-export type ValidationSchema = z.infer<typeof employeeSchema>;
+export type EmployeeValidationSchema = z.infer<typeof employeeSchema>;
+export const useEmployeeFrom = useForm<EmployeeValidationSchema>;
 
 const Screen: NextPage = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ValidationSchema>({
+  const { register, handleSubmit, formState } = useEmployeeFrom({
     resolver: zodResolver(employeeSchema),
   });
   const createEmployeeMutation = api.employee.create.useMutation({
@@ -65,28 +54,7 @@ const Screen: NextPage = () => {
             return createEmployeeMutation.mutate(e);
           })}
         >
-          {Object.keys(employeeSchema.shape).map((v) => {
-            const key = v as keyof ValidationSchema;
-
-            return (
-              <div key={key} className={"pb-4"}>
-                <label htmlFor={key} className={"pb-1"}>
-                  {key}
-                </label>
-                <Input
-                  type="text"
-                  id={key}
-                  {...register(key)}
-                  placeholder={placeholders[key]}
-                />
-                {errors[key] && (
-                  <p className=" text-red-500">
-                    {errors[key]?.message?.toString()}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          <EmployeeFields register={register} formState={formState} />
 
           <Button variant="default" type="submit">
             Create employee

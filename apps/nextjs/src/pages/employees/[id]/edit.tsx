@@ -3,27 +3,23 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { type z } from "zod";
 
 import { api } from "~/utils/api";
+import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
+import { useEmplyeeById } from "~/features/employees/hooks/useEmployeeById";
 import { Button } from "~/features/shared/components/Button";
-import { Input } from "~/features/shared/components/Input";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
-import { useEmplyeeById } from ".";
-import { employeeSchema, placeholders, type ValidationSchema } from "../create";
+import { employeeSchema, type EmployeeValidationSchema } from "../create";
 
 const Screen: NextPage = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ValidationSchema>({
-    resolver: zodResolver(employeeSchema),
-  });
+  const { register, handleSubmit, formState } =
+    useForm<EmployeeValidationSchema>({
+      resolver: zodResolver(employeeSchema),
+    });
   const employeeByIdQuery = useEmplyeeById();
   const editEmployeeMutation = api.employee.edit.useMutation({
     onSettled: async () => {
@@ -53,29 +49,11 @@ const Screen: NextPage = () => {
             });
           })}
         >
-          {Object.keys(employeeSchema.shape).map((v) => {
-            const key = v as keyof ValidationSchema;
-
-            return (
-              <div key={key} className={"pb-4"}>
-                <label htmlFor={key} className={"pb-1"}>
-                  {key}
-                </label>
-                <Input
-                  type="text"
-                  id={key}
-                  defaultValue={employeeByIdQuery.data?.[key] ?? ""}
-                  {...register(key)}
-                  placeholder={placeholders[key]}
-                />
-                {errors[key] && (
-                  <p className=" text-red-500">
-                    {errors[key]?.message?.toString()}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          <EmployeeFields
+            register={register}
+            formState={formState}
+            employee={employeeByIdQuery.data}
+          />
 
           <Button variant="default" type="submit">
             Edit employee

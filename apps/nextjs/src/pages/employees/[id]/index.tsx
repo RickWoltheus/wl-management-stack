@@ -5,22 +5,14 @@ import { useRouter } from "next/router";
 import { Pen, Trash } from "lucide-react";
 
 import { api } from "~/utils/api";
+import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
+import { useEmplyeeById } from "~/features/employees/hooks/useEmployeeById";
 import { Button } from "~/features/shared/components/Button";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
 import { formatEmployeeName } from "~/features/shared/utils/names";
-import { employeeSchema, type ValidationSchema } from "../create";
 
-export function useEmplyeeById() {
-  const router = useRouter();
-
-  const employeeByIdQuery = api.employee.byId.useQuery({
-    id: router.query.id as string,
-  });
-
-  return employeeByIdQuery;
-}
 const Screen: NextPage = () => {
   const router = useRouter();
   const { toast } = useToast();
@@ -42,18 +34,7 @@ const Screen: NextPage = () => {
 
     return (
       <>
-        {Object.keys(employeeSchema.shape).map((v) => {
-          const key = v as keyof ValidationSchema;
-
-          return (
-            <div key={key} className={"w-full pb-2"}>
-              <label htmlFor={key} className={"pb-1  font-bold"}>
-                {key}
-              </label>
-              <p>{employeeByIdQuery.data?.[key]}</p>
-            </div>
-          );
-        })}
+        <EmployeeFields employee={employeeByIdQuery.data} />
       </>
     );
   };
@@ -90,7 +71,6 @@ const Screen: NextPage = () => {
             </div>
           }
         />
-
         <Fields />
       </PageLayout>
     </>
