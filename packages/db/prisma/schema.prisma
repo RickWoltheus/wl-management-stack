@@ -76,8 +76,6 @@ model WorkTicket {
     userId      String
     client     Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
     clientId   String
-    location     Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
-    locationId   String
     employee     Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
     employeeId   String
 }
@@ -92,13 +90,6 @@ model Client {
     workTickets      WorkTicket[]
 }
 
-model Location {
-    id          String   @id @default(cuid())
-    street     String
-    city      String
-    houseNumber String
-    workTickets      WorkTicket[]
-}
 
 model Employee {
     id          String   @id @default(cuid())

@@ -1,13 +1,14 @@
+import { employeeSchema } from "@acme/api/src/schemas/employee";
 import { type Employee } from "@acme/db";
 
 import { Input } from "~/features/shared/components/Input";
 import {
-  employeeSchema,
   type EmployeeValidationSchema,
   type useEmployeeFrom,
 } from "~/pages/employees/create";
 
 export const placeholders = {
+  id: "id",
   firstname: "John",
   insertion: "van",
   lastname: "Doe",
@@ -61,5 +62,3 @@ export const EmployeeFields: React.FC<{
     </>
   );
 };
-
-export default Screen;

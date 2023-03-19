@@ -1,5 +1,6 @@
-import { date, z } from "zod";
+import { z } from "zod";
 
+import { employeeSchema } from "../schemas/employee";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const employeeRouter = createTRPCRouter({
@@ -12,36 +13,19 @@ export const employeeRouter = createTRPCRouter({
       return ctx.prisma.employee.findFirst({ where: { id: input.id } });
     }),
   create: publicProcedure
-    .input(
-      z.object({
-        firstname: z.string().min(1),
-        insertion: z.string().min(1),
-        lastname: z.string().min(1),
-        email: z.string().email(),
-        role: z.string().min(1),
-      }),
-    )
+    .input(employeeSchema.omit({ id: true }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.employee.create({ data: input });
     }),
-  delete: publicProcedure.input(z.string()).mutation(({ ctx, input }) => {
-    return ctx.prisma.employee.delete({ where: { id: input } });
-  }),
-  edit: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        firstname: z.string().min(1),
-        insertion: z.string().min(1),
-        lastname: z.string().min(1),
-        email: z.string().email(),
-        role: z.string().min(1),
-      }),
-    )
+  delete: publicProcedure
+    .input(z.string().min(1))
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.employee.update({
-        where: { id: input.id },
-        data: input,
-      });
+      return ctx.prisma.employee.delete({ where: { id: input } });
     }),
+  edit: publicProcedure.input(employeeSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.employee.update({
+      where: { id: input.id },
+      data: input,
+    });
+  }),
 });

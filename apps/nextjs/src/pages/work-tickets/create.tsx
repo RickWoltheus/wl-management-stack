@@ -5,27 +5,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 
-import { employeeSchema } from "@acme/api/src/schemas/employee";
+import { workTicketSchema } from "@acme/api/src/schemas/workTickets";
 
 import { api } from "~/utils/api";
-import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
 import { Button } from "~/features/shared/components/Button";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
+import { WorkTicketFields } from "~/features/worktickets/components/fields/WorkTicketFields";
 
-export type EmployeeValidationSchema = z.infer<typeof employeeSchema>;
-export const useEmployeeFrom = useForm<EmployeeValidationSchema>;
+export type WorkTicketValidationSchema = z.infer<typeof workTicketSchema>;
+export const useWorkTicketFrom = useForm<WorkTicketValidationSchema>;
 
 const Screen: NextPage = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const { register, handleSubmit, formState } = useEmployeeFrom({
-    resolver: zodResolver(employeeSchema),
+  const { register, handleSubmit, formState } = useWorkTicketFrom({
+    resolver: zodResolver(workTicketSchema),
   });
-  const createEmployeeMutation = api.employee.create.useMutation({
+  const createWorkTicketMutation = api.workTicket.create.useMutation({
     onSettled: async () => {
-      await router.push("/employees");
+      await router.push("/worktickets");
     },
 
     onError: (error) => {
@@ -39,19 +39,19 @@ const Screen: NextPage = () => {
   return (
     <>
       <Head>
-        <title>wl management system: Create employee</title>
+        <title>wl management system: Create workticket</title>
       </Head>
       <PageLayout>
-        <PageHeader title="Create employee" />
+        <PageHeader title="Create workticket" />
         <form
           onSubmit={handleSubmit((e) => {
-            return createEmployeeMutation.mutate(e);
+            return createWorkTicketMutation.mutate(e);
           })}
         >
-          <EmployeeFields register={register} formState={formState} />
+          <WorkTicketFields register={register} formState={formState} />
 
           <Button variant="default" type="submit">
-            Create employee
+            Create workticket
           </Button>
         </form>
       </PageLayout>
