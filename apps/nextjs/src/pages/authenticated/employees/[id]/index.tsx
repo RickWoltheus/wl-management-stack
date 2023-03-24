@@ -19,7 +19,7 @@ const Screen: NextPage = () => {
   const employeeByIdQuery = useEmplyeeById();
 
   const deletePostMutation = api.employee.delete.useMutation({
-    onSuccess: () => router.push("/employees"),
+    onSuccess: () => router.push("/authenticated/employees"),
     onError: () => toast({ title: "Error deleting employee" }),
   });
 
@@ -53,7 +53,9 @@ const Screen: NextPage = () => {
           includeGoBack={true}
           ActionComponents={
             <div className={"flex space-x-2"}>
-              <NextLink href={`/employees/${router.query.id}/edit`}>
+              <NextLink
+                href={`/authenticated/employees/${router.query.id}/edit`}
+              >
                 <Button variant={"ghost"}>
                   <Pen size={16} className="mr-2" />
                   Edit

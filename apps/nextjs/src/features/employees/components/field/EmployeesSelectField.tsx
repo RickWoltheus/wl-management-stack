@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "~/features/shared/components/Select";
 import { formatEmployeeName } from "~/features/shared/utils/names";
-import { type useWorkTicketFrom } from "~/pages/work-tickets/create";
+import { type useWorkTicketFrom } from "~/pages/authenticated/work-tickets/create";
 
 export const EmployeeSelectField: React.FC<{
   register?: ReturnType<typeof useWorkTicketFrom>["register"];
@@ -54,7 +54,7 @@ export const EmployeeSelectField: React.FC<{
           ))}
           <hr></hr>
           <div className="flex justify-center">
-            <NextLink href="/employees/create">
+            <NextLink href="/authenticated/employees/create">
               <Button className=" mt-1" variant="link" size="sm">
                 Create employee <Plus className="ml-1" size={16} />
               </Button>

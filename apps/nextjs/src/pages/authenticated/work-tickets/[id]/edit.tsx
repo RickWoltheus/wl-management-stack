@@ -4,28 +4,28 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { employeeSchema } from "@acme/api/src/schemas/employee";
+import { workTicketSchema } from "@acme/api/src/schemas/workTickets";
 
 import { api } from "~/utils/api";
-import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
-import { useEmplyeeById } from "~/features/employees/hooks/useEmployeeById";
 import { Button } from "~/features/shared/components/Button";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
-import { type EmployeeValidationSchema } from "../create";
+import { WorkTicketFields } from "~/features/worktickets/components/fields/WorkTicketFields";
+import { useWorkTicketById } from "~/features/worktickets/hooks/useWorkTicketById";
+import { type WorkTicketValidationSchema } from "../create";
 
 const Screen: NextPage = () => {
   const { toast } = useToast();
   const router = useRouter();
   const { register, handleSubmit, formState } =
-    useForm<EmployeeValidationSchema>({
-      resolver: zodResolver(employeeSchema),
+    useForm<WorkTicketValidationSchema>({
+      resolver: zodResolver(workTicketSchema),
     });
-  const employeeByIdQuery = useEmplyeeById();
-  const editEmployeeMutation = api.employee.edit.useMutation({
+  const workticketByIdQuery = useWorkTicketById();
+  const editWorkTicketMutation = api.workTicket.edit.useMutation({
     onSettled: async () => {
-      await router.push("/employees");
+      await router.push("/worktickets");
     },
 
     onError: (error) => {
@@ -39,26 +39,28 @@ const Screen: NextPage = () => {
   return (
     <>
       <Head>
-        <title>wl management system: Edit employee</title>
+        <title>wl management system: Edit workticket</title>
       </Head>
       <PageLayout>
-        <PageHeader title="Edit employee" />
+        <PageHeader title="Edit workticket" />
         <form
-          onSubmit={handleSubmit((e) => {
-            return editEmployeeMutation.mutate({
-              ...e,
-              id: router.query.id as string,
-            });
-          })}
+          onSubmit={() =>
+            void handleSubmit((e) => {
+              return editWorkTicketMutation.mutate({
+                ...e,
+                id: router.query.id as string,
+              });
+            })
+          }
         >
-          <EmployeeFields
+          <WorkTicketFields
             register={register}
             formState={formState}
-            employee={employeeByIdQuery.data}
+            workticket={workticketByIdQuery.data}
           />
 
           <Button variant="default" type="submit">
-            Edit employee
+            Edit workticket
           </Button>
         </form>
       </PageLayout>

@@ -44,9 +44,11 @@ const Screen: NextPage = () => {
       <PageLayout>
         <PageHeader title="Create workticket" />
         <form
-          onSubmit={handleSubmit((e) => {
-            return createWorkTicketMutation.mutate(e);
-          })}
+          onSubmit={() =>
+            void handleSubmit((e) => {
+              return createWorkTicketMutation.mutate(e);
+            })
+          }
         >
           <WorkTicketFields register={register} formState={formState} />
 

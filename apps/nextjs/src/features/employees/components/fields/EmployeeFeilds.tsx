@@ -5,7 +5,7 @@ import { Input } from "~/features/shared/components/Input";
 import {
   type EmployeeValidationSchema,
   type useEmployeeFrom,
-} from "~/pages/employees/create";
+} from "~/pages/authenticated/employees/create";
 
 export const placeholders = {
   id: "id",

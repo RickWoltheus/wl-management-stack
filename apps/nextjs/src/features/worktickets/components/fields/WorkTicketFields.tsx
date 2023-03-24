@@ -5,7 +5,7 @@ import { Input } from "~/features/shared/components/Input";
 import {
   type WorkTicketValidationSchema,
   type useWorkTicketFrom,
-} from "~/pages/work-tickets/create";
+} from "~/pages/authenticated/work-tickets/create";
 import { type useWorkTicketById } from "../../hooks/useWorkTicketById";
 
 export const placeholders = {

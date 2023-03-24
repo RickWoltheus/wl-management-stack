@@ -21,13 +21,16 @@ export function Navbar() {
           <NavigationMenuTrigger>Work tickets</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              <ListItem href="/work-tickets" title="Overview">
+              <ListItem href="/authenticated/work-tickets" title="Overview">
                 <div className="mt-2 flex">
                   <List className="mr-2" size={16} /> A overview of all work
                   tickets assigned to you
                 </div>
               </ListItem>
-              <ListItem href="/work-tickets/create" title="Create work ticket">
+              <ListItem
+                href="/authenticated/work-tickets/create"
+                title="Create work ticket"
+              >
                 <div className="mt-2 flex">
                   <PlusSquare className="mr-2" size={16} />
                   Create a new work ticket quickly{" "}
@@ -40,13 +43,16 @@ export function Navbar() {
           <NavigationMenuTrigger>Employees</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              <ListItem href="/employees" title="Overview">
+              <ListItem href="/authenticated/employees" title="Overview">
                 <div className="mt-2 flex">
                   <List className="mr-2" size={16} /> A overview of all
                   employees at [PLACEHOLDER]
                 </div>
               </ListItem>
-              <ListItem href="/employees/create" title="Create employee">
+              <ListItem
+                href="/authenticated/employees/create"
+                title="Create employee"
+              >
                 <div className="mt-2 flex">
                   <PlusSquare className="mr-2" size={16} />
                   Create a new work ticket quickly{" "}

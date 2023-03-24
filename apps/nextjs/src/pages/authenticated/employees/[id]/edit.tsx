@@ -3,29 +3,29 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { type z } from "zod";
 
 import { employeeSchema } from "@acme/api/src/schemas/employee";
 
 import { api } from "~/utils/api";
 import { EmployeeFields } from "~/features/employees/components/fields/EmployeeFeilds";
+import { useEmplyeeById } from "~/features/employees/hooks/useEmployeeById";
 import { Button } from "~/features/shared/components/Button";
 import { PageHeader } from "~/features/shared/components/PageHeader";
 import { PageLayout } from "~/features/shared/components/PageLayout";
 import { useToast } from "~/features/shared/hooks/useToast";
-
-export type EmployeeValidationSchema = z.infer<typeof employeeSchema>;
-export const useEmployeeFrom = useForm<EmployeeValidationSchema>;
+import { type EmployeeValidationSchema } from "../create";
 
 const Screen: NextPage = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const { register, handleSubmit, formState } = useEmployeeFrom({
-    resolver: zodResolver(employeeSchema),
-  });
-  const createEmployeeMutation = api.employee.create.useMutation({
+  const { register, handleSubmit, formState } =
+    useForm<EmployeeValidationSchema>({
+      resolver: zodResolver(employeeSchema),
+    });
+  const employeeByIdQuery = useEmplyeeById();
+  const editEmployeeMutation = api.employee.edit.useMutation({
     onSettled: async () => {
-      await router.push("/employees");
+      await router.push("/authenticated/employees");
     },
 
     onError: (error) => {
@@ -39,19 +39,28 @@ const Screen: NextPage = () => {
   return (
     <>
       <Head>
-        <title>wl management system: Create employee</title>
+        <title>wl management system: Edit employee</title>
       </Head>
       <PageLayout>
-        <PageHeader title="Create employee" />
+        <PageHeader title="Edit employee" />
         <form
-          onSubmit={handleSubmit((e) => {
-            return createEmployeeMutation.mutate(e);
-          })}
+          onSubmit={() =>
+            void handleSubmit((e) => {
+              return editEmployeeMutation.mutate({
+                ...e,
+                id: router.query.id as string,
+              });
+            })
+          }
         >
-          <EmployeeFields register={register} formState={formState} />
+          <EmployeeFields
+            register={register}
+            formState={formState}
+            employee={employeeByIdQuery.data}
+          />
 
           <Button variant="default" type="submit">
-            Create employee
+            Edit employee
           </Button>
         </form>
       </PageLayout>
